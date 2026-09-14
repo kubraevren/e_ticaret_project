@@ -37,6 +37,22 @@ public class ProductService {
         return  productMapper.toDto(product.orElse(null));
     }
 
+    public void deleteProductById(String id) {
+        productRepository.deleteById(id);
+    }
 
+    public ProductDto updateProduct(ProductDtoUI  productDtoUI, String id) {
+        Optional<ProductEntity> product= productRepository.findById(id);
+       if(product.isEmpty()){
+           throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST,id));
+       }
+           product.get().setName(productDtoUI.getName());
+           product.get().setPrice(productDtoUI.getPrice());
+           product.get().setStockQuantity(productDtoUI.getStockQuantity());
+
+        productRepository.save(product.get());
+        return productMapper.toDto(product.get());
+    }
+//product.get()--> ProductEntity veri tipindedir.
     }
 
